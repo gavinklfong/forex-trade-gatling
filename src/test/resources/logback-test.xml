@@ -12,6 +12,8 @@
 	<!-- uncomment and set to TRACE to log all HTTP requests -->
 	<!--<logger name="io.gatling.http.engine.response" level="TRACE" />-->
 
+	<logger name="io.gatling.http.ahc" level="DEBUG" />
+
 	<root level="WARN">
 		<appender-ref ref="CONSOLE" />
 	</root>

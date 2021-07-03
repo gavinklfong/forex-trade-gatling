@@ -1,0 +1,7 @@
+{
+  "baseCurrency": "${baseCurrency}",
+  "counterCurrency": "${counterCurrency}",
+  "baseCurrencyAmount": ${baseCurrencyAmount},
+  "tradeAction": "${tradeAction}",
+  "customerId": ${customerId}
+}
