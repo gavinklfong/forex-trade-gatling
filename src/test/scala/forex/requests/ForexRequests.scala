@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 
 import scala.util.Random
 
-object ForexRequests {
+  object ForexRequests {
 
   val baseCurrenciesFeeder = csv("data/baseCurrencies.csv").random
   val currencyPairsFeeder = csv("data/currencyPairs.csv").random

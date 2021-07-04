@@ -21,23 +21,23 @@ class ForexSimulation extends Simulation {
   }
 
   object UserJourneys {
-    def minPause = 100.milliseconds
-    def maxPause = 500.milliseconds
+    def minPause = 1.second
+    def maxPause = 3.second
 
     def browseForexRates = {
-      repeat(3) {
-        exec(ForexRequests.getRateByBaseCurrency)
-          .pause(minPause, maxPause)
-        exec(ForexRequests.getRateByCurrencyPair)
-          .pause(minPause, maxPause)
-      }
-    }
-
-    def browseForexRateAndBookRate = {
       repeat(5) {
         exec(ForexRequests.getRateByBaseCurrency)
           .pause(minPause, maxPause)
-        exec(ForexRequests.getRateByCurrencyPair)
+        .exec(ForexRequests.getRateByCurrencyPair)
+          .pause(minPause, maxPause)
+      }
+    }
+
+    def browseForexRatesAndBookRate = {
+      repeat(5) {
+        exec(ForexRequests.getRateByBaseCurrency)
+          .pause(minPause, maxPause)
+        .exec(ForexRequests.getRateByCurrencyPair)
           .pause(minPause, maxPause)
       }
       .exec(ForexRequests.bookRate)
@@ -45,7 +45,7 @@ class ForexSimulation extends Simulation {
         .exec(ForexRequests.submitForexTradeDeal)
     }
 
-    def browseForexAndSubmitForexTradeDeal = {
+    def browseForexRatesAndSubmitForexTradeDeal = {
       repeat(3) {
         exec(ForexRequests.getRateByCurrencyPair)
           .pause(minPause, maxPause)
@@ -54,20 +54,19 @@ class ForexSimulation extends Simulation {
         .pause(minPause, maxPause)
         .exec(ForexRequests.submitForexTradeDeal)
     }
-
   }
 
-  val scn = scenario("ForexSimulation").during(10.seconds) {
-    randomSwitch (
+  val scn = scenario("ForexSimulation")
+    .randomSwitch (
       60d -> exec(UserJourneys.browseForexRates),
-      30d -> exec(UserJourneys.browseForexRateAndBookRate),
-      10d -> exec(UserJourneys.browseForexAndSubmitForexTradeDeal)
+      30d -> exec(UserJourneys.browseForexRatesAndBookRate),
+      10d -> exec(UserJourneys.browseForexRatesAndSubmitForexTradeDeal)
     )
-  }
+
 
   setUp(
     scn.inject(
-      constantUsersPerSec(5) during (10)
+      constantUsersPerSec(10) during (1.minute)
 //        constantConcurrentUsers(10).during(10.seconds),
 //        rampConcurrentUsers(10).to(20).during(10.seconds)
 
