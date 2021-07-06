@@ -66,7 +66,7 @@ class ForexSimulation extends Simulation {
 
   setUp(
     scn.inject(
-      constantUsersPerSec(10) during (1.minute)
+      constantUsersPerSec(5) during (1.minute)
 //        constantConcurrentUsers(10).during(10.seconds),
 //        rampConcurrentUsers(10).to(20).during(10.seconds)
 
