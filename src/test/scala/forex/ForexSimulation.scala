@@ -8,8 +8,7 @@ import io.gatling.http.Predef._
 
 class ForexSimulation extends Simulation {
 
-//  val API_HOST = "localhost"
-  val API_HOST = "192.168.30.111"
+  val API_HOST = "localhost"
   val API_PORT = "8080"
 
   val INITIAL_USER_PER_SEC = 10
@@ -19,7 +18,7 @@ class ForexSimulation extends Simulation {
     .baseUrl("http://" + getProperty("API_HOST", API_HOST) + ":" + getProperty("API_PORT", API_PORT))
 
   println("Test Target: " + "http://" + getProperty("API_HOST", API_HOST) + ":" + getProperty("API_PORT", API_PORT))
-  println("Request Volume:")
+  println("Volume:")
   println("Initial no. of user per sec: " + getProperty("INITIAL_USER_PER_SEC", INITIAL_USER_PER_SEC))
   println("Target no. of user per sec: " + getProperty("TARGET_USER_PER_SEC", TARGET_USER_PER_SEC))
 
