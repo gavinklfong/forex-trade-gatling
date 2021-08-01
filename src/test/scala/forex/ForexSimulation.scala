@@ -12,10 +12,24 @@ class ForexSimulation extends Simulation {
   val API_HOST = "192.168.30.111"
   val API_PORT = "8080"
 
+  val INITIAL_USER_PER_SEC = 10
+  val TARGET_USER_PER_SEC = 40
+
   val httpProtocol = http
     .baseUrl("http://" + getProperty("API_HOST", API_HOST) + ":" + getProperty("API_PORT", API_PORT))
 
+  println("Test Target: " + "http://" + getProperty("API_HOST", API_HOST) + ":" + getProperty("API_PORT", API_PORT))
+  println("Request Volume:")
+  println("Initial no. of user per sec: " + getProperty("INITIAL_USER_PER_SEC", INITIAL_USER_PER_SEC))
+  println("Target no. of user per sec: " + getProperty("TARGET_USER_PER_SEC", TARGET_USER_PER_SEC))
+
   private def getProperty(propertyName: String, defaultValue: String) = {
+    Option(System.getenv(propertyName))
+      .orElse(Option(System.getProperty(propertyName)))
+      .getOrElse(defaultValue)
+  }
+
+  private def getProperty(propertyName: String, defaultValue: Int) = {
     Option(System.getenv(propertyName))
       .orElse(Option(System.getProperty(propertyName)))
       .getOrElse(defaultValue)
@@ -67,9 +81,22 @@ class ForexSimulation extends Simulation {
 
   setUp(
     scn.inject(
-      constantUsersPerSec(10).during(15.seconds),
-      rampUsersPerSec(10).to(40).during(15.seconds),
-      constantUsersPerSec(40).during(30.seconds),
+      constantUsersPerSec(getProperty("INITIAL_USER_PER_SEC", INITIAL_USER_PER_SEC).toString.toInt)
+        .during(15.seconds),
+
+      rampUsersPerSec(getProperty("INITIAL_USER_PER_SEC", INITIAL_USER_PER_SEC).toString.toInt)
+        .to(getProperty("TARGET_USER_PER_SEC", TARGET_USER_PER_SEC).toString.toInt)
+        .during(15.seconds),
+
+      constantUsersPerSec(getProperty("TARGET_USER_PER_SEC", TARGET_USER_PER_SEC).toString.toInt)
+        .during(30.seconds),
+
+//      constantUsersPerSec(20).during(15.seconds),
+//      rampUsersPerSec(20).to(80).during(15.seconds),
+//      constantUsersPerSec(80).during(30.seconds),
+
+
+
 //      heavisideUsers(100).during(30.seconds)
 
 //        constantConcurrentUsers(10).during(10.seconds),
